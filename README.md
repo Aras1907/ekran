@@ -60,6 +60,29 @@ flatpak kill io.github.ekran.Ekran
 make flatpak-run
 ```
 
+## Install from Flatpak Repo
+
+A self-hosted OSTree repo is published on GitHub Pages:
+
+```bash
+# 1. Add the repo (no GPG verification)
+flatpak remote-add --user --no-gpg-verify --if-not-exists ekran \
+  https://aras1907.github.io/ekran-flatpak/
+
+# 2. Install (runtime comes from flathub)
+flatpak install --user ekran io.github.ekran.Ekran
+
+# 3. Run
+flatpak run io.github.ekran.Ekran
+```
+
+To publish updates after rebuilding locally:
+```bash
+make flatpak-publish
+```
+
+Note: `.nojekyll` is included in the OSTree repo so GitHub Pages serves binary `.gz` files correctly.
+
 ## Config
 
 Settings are saved at `~/.config/ekran/settings.json` (from source) or `~/.var/app/io.github.ekran.Ekran/config/ekran/settings.json` (flatpak). Stores last brightness/contrast per display and the selected monitor.

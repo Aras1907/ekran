@@ -1,4 +1,4 @@
-.PHONY: run clean flatpak-build flatpak-run flatpak-clean
+.PHONY: run clean flatpak-build flatpak-run flatpak-clean flatpak-publish
 
 run:
 	python3 -m ekran.main
@@ -14,3 +14,7 @@ flatpak-run:
 
 flatpak-clean:
 	rm -rf build .flatpak-builder
+
+flatpak-publish:
+	flatpak-builder --repo=ekran-repo --force-clean --disable-cache build io.github.ekran.Ekran.yml
+	cd ekran-repo && git add -A && git commit -m "Update OSTree repo" && git push origin main
