@@ -1,0 +1,50 @@
+app-id: io.github.ekran.Ekran
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+command: ekran
+
+finish-args:
+  - --device=all
+  - --share=ipc
+  - --socket=wayland
+  - --socket=x11
+  - --socket=session-bus
+
+modules:
+  # Required by ddcutil (not in GNOME runtime)
+  - name: jansson
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/akheron/jansson/releases/download/v2.14/jansson-2.14.tar.gz
+        sha256: 5798d010e41cf8d76b66236cfb2f2543c8d082181d16bc3085ab49538d4b9929
+
+  # DDC/CI backend — I2C only, most features disabled
+  - name: ddcutil
+    buildsystem: simple
+    build-commands:
+      - ./autogen.sh
+      - sed -i 's/\(^[[:space:]]*\)find.*-delete/\1echo patched/' data/Makefile.in
+      - ./configure --prefix=/app --disable-usb --disable-systemd --disable-dbus --disable-x11 --disable-doxygen --enable-drm --enable-install-lib-only
+      - make
+      - make install
+    sources:
+      - type: git
+        url: https://github.com/rockowitz/ddcutil.git
+        tag: v2.2.1
+        commit: 0b26bbec67b09b5ab594a06de8bbbdea621e8628
+
+  # Ekran application
+  - name: ekran
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 launcher /app/bin/ekran
+      - mkdir -p /app/lib/ekran
+      - cp -r ekran /app/lib/ekran/ekran
+      - cp -r ui /app/lib/ekran/ui
+      - install -Dm644 data/io.github.ekran.Ekran.desktop /app/share/applications/io.github.ekran.Ekran.desktop
+      - install -Dm644 data/io.github.ekran.Ekran.svg /app/share/icons/hicolor/scalable/apps/io.github.ekran.Ekran.svg
+    sources:
+      - type: dir
+        path: .

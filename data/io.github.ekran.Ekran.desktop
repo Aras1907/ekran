@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Ekran
+Comment=Control monitor brightness and color via DDC/CI
+Exec=ekran
+Icon=io.github.ekran.Ekran
+Terminal=false
+Type=Application
+Categories=Utility;Settings;
+StartupNotify=true

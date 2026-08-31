@@ -1,0 +1,5 @@
+# Ekran dependencies — installed via dnf, not pip
+# python3-gobject    (PyGObject / gi)
+# gtk4               (GTK 4)
+# libadwaita         (Adw)
+# ddcutil            (DDC/CI backend)
